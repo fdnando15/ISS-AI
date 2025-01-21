@@ -67,18 +67,24 @@ def train(n, numGen, sizeElite, k, p, mutationProb):
         eval = ag.sortFitness(population)
 
         elite = eval[:sizeElite]
+        #print("elite1: ", elite)
         elite = [x[1] for x in elite]
         eval = eval[sizeElite:]
+
+        #print(eval)
+        newGen = []
+        print("elite: ", elite)
+        
         
         # if the number of individual in the population after select the elite is odd, we add another one in the elite
         if len(eval)%2 == 1:
-            elite.append(eval.pop(0)[1])
+            elite.append(eval.pop()[1])
+
 
         #Selecction by tournament:
         parents = GeneticAlgorithm.GeneticAlgorithm.parentSelection(eval, k)
-        
-        newGen = []
-        newGen.append(elite[0])
+
+        print("parents: ", parents)
 
         while(len(parents) > 0):
             pair = random.sample(parents, 2)
@@ -89,8 +95,14 @@ def train(n, numGen, sizeElite, k, p, mutationProb):
             parents.remove(pair[1])
         
         #Assess the new generation
-        eval = ag.sortFitness(newGen)
-        print("Generation ", i, " error: " , eval[0][0])
+
+        
+        newGen = elite + newGen
+        print("nuevoa genrarion", newGen)
+        evalNew = ag.sortFitness(newGen)
+        new_population = [x[1] for x in evalNew]
+        population = new_population
+        print("Generation ", i, " error: " , evalNew[0])
         
     return eval[0]
 
@@ -98,11 +110,11 @@ def train(n, numGen, sizeElite, k, p, mutationProb):
 if __name__ == "__main__":
 
     n_ind = 10 # number of chromosomes
-    n_iter = 100 # number of iterations
+    n_iter = 5 # number of iterations
     elitismRate = 0.2
     sizeElite = math.floor(n_ind*elitismRate)
 
-    k = 3
+    k = 2
     #Probabilidad de cruce
     p = 0.8
     #Probabilidad de mutación
