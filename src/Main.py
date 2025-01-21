@@ -73,7 +73,7 @@ def train(n, numGen, sizeElite, k, p, mutationProb):
 
         #print(eval)
         newGen = []
-        print("elite: ", elite)
+        #print("elite: ", elite)
         
         
         # if the number of individual in the population after select the elite is odd, we add another one in the elite
@@ -84,7 +84,7 @@ def train(n, numGen, sizeElite, k, p, mutationProb):
         #Selecction by tournament:
         parents = GeneticAlgorithm.GeneticAlgorithm.parentSelection(eval, k)
 
-        print("parents: ", parents)
+        #print("parents: ", parents)
 
         while(len(parents) > 0):
             pair = random.sample(parents, 2)
@@ -98,13 +98,13 @@ def train(n, numGen, sizeElite, k, p, mutationProb):
 
         
         newGen = elite + newGen
-        print("nuevoa genrarion", newGen)
+        #print("nuevoa genrarion", newGen)
         evalNew = ag.sortFitness(newGen)
         new_population = [x[1] for x in evalNew]
         population = new_population
         print("Generation ", i, " error: " , evalNew[0])
         
-    return eval[0]
+    return population
 
 
 if __name__ == "__main__":
@@ -121,4 +121,12 @@ if __name__ == "__main__":
     mutationProb = 0.1
     #Brusquedad en las mutaciones (0.3 por defecto)
     mutationDelta = 0.2
-    train(n_ind, n_iter, sizeElite, k, p, mutationProb)
+    lastGeneration = train(n_ind, n_iter, sizeElite, k, p, mutationProb)
+
+
+   
+    data_path_test = os.path.join('data', 'test_updated.csv')
+    #Data_path uses os library to make a path valid for linux and windows machines
+    cars_test = Read.read_data(data_path_test)
+    errortest = Chromosome.Chromosome.fitnessFunction(lastGeneration[0], cars_test)
+    print("Error en test: ", errortest)
