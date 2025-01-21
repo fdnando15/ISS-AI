@@ -7,9 +7,8 @@ import Read
 
 class GeneticAlgorithm:
 
-    def __init__(self, datos_train,datos_test, seed, nInd, maxIter):
+    def __init__(self, datos_train,seed, nInd, maxIter):
         self.datos_train = Read.read_data(datos_train)
-        self.datos_test = Read.read_data(datos_test)
         self.seed = seed
         self.nInd = nInd
         self.maxIter = maxIter
@@ -19,17 +18,16 @@ class GeneticAlgorithm:
     def __repr__(self):
         return (f"GeneticAlgorithm:\n"
             f"Train data size: {len(self.datos_train)} rows\n"
-            f"Test data size: {len(self.datos_test)} rows\n"
             f"Population size: {self.nInd}\n"
             f"Max iterations: {self.maxIter}\n")
 
 
-    def generatePopulation(self, size):
+    def generatePopulation(self):
 
         n = self.nInd
         cromosomas = []
         for i in range(n):
-            cromosomas.append(Chromosome.create_random(size))
+            cromosomas.append(Chromosome.create_random(35))
         return cromosomas
     
     #change the name
@@ -115,8 +113,6 @@ mutationDelta = 0.2
 ag = GeneticAlgorithm(
 	# datos de entrenamiento (para el proceso del AG)
 	datos_train = "data/train_updated.csv", 
-	# datos de validacion/test (para predecir)
-	datos_test = "data/test_updated.csv",
 	# semilla para numeros aleatorios
 	seed=123, 
 	# numero de individuos
@@ -124,25 +120,24 @@ ag = GeneticAlgorithm(
 	# maximo de iteraciones
 	maxIter = n_iter
 )
-#print(ag)
-
+print(ag)
 
 
 # Test the generatePopulation method
-population = ag.generatePopulation(35)
-#print(population)
+population = ag.generatePopulation()
+print(population)
 eval = ag.sortFitness(population)
-#print(eval)
-
+print(eval)
 
 # How many chromosome will be elite
 elite = eval[:sizeElite]
+print("esto es la elite", elite)
 
 # this is the elites chromosomes
 elite = [x[1] for x in elite]
 #print(elite)
 eval = eval[sizeElite:]
-#print(len(eval))
+print(len(eval))
 
 parents = GeneticAlgorithm.parentSelection(eval, k)
 #print(parents)
