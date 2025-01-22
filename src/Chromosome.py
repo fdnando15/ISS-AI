@@ -6,10 +6,11 @@ from Read import read_data
 
 class Chromosome:
 
+    # Constructor
     def __init__(self, attributes):
         self.attributes = attributes
 
-
+    # String representation of the chromosome
     def __str__(self):
         res = "["
         for i in range(len(self.attributes)//2):
@@ -18,6 +19,7 @@ class Chromosome:
         return res
 
 
+    # Create a random chromosome
     @classmethod
     def create_random(cls, size):
     
@@ -26,21 +28,22 @@ class Chromosome:
         )
     
 
-    # Use the regression formula to calculate the value of y
+    # Use the regression formula to calculate the value of y'
     @staticmethod
-    def computeY(cromosoma, data):
+    def computeY(cromosoma, row):
         res = 0.0
-        vars = list(data)
+        vars = list(row)
         for i in range(len(vars)-1):
             if vars[i] == 0.0:
                 continue
-
+            
+            # Compute the value of y' using the regression formula, get the real part of the result
             res += cromosoma.attributes[i*2]* (float(vars[i])**cromosoma.attributes[i*2+1]).real
         
         res += cromosoma.attributes[-1]
         return res
     
-    # Calculate the error between computeY and real y
+    # Calculate the error between y' and real y
     @staticmethod
     def fitnessFunction(cromosoma,data):
         # We will use RMSE (Root Mean Square Error) to measure performance
@@ -60,9 +63,11 @@ class Chromosome:
         avgError = math.sqrt(avgError/len(data))
         return avgError
 
-data = read_data("data/train_updated.csv")
+
+# Test
+#data = read_data("data/train_updated.csv")
 #data = [[0.1, 0.5, 1, 0, 0.8],[0.4, 0.3, 0.7 ,0 , 0.6]]
-chromosome1 = Chromosome.create_random((len(data[0])*2)+1)
+#chromosome1 = Chromosome.create_random((len(data[0])*2)+1)
 #print((len(data[0])*2)+1)
 #print(chromosome1)
 #print(Chromosome.fitnessFunction(chromosome1,data))

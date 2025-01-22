@@ -3,89 +3,51 @@ import os
 import Chromosome
 import GeneticAlgorithm
 import random
-
 import Read
 
-"""def main():
-    print("Hello, World! The project is working")
-    
-    # Number of chromosome
-    n = 35
-    # Numbre of generations
-    numGen = 10
-    # The best two individual of each generation pass to the following generation without changes:
-    elitismRate = 0.05
-    sizeElite = math.floor(n*elitismRate)
 
-    #Rate k for the selecion of paretns by tournament
-    k = 2
-
-    #probability of cross
-    p = 0.8
-
-    #point of cut for the cross
-    cut = 9
-
-    #probability of mutation
-    mutationProb = 0.2
-
-    # Read data
-    data_path_train = os.path.join('data', 'train_updated.csv')
-    data_path_test = os.path.join('data', 'test_updated.csv')
-    #Data_path uses os library to make a path valid for linux and windows machines
-    cars_train = Read.read_data(data_path_train)
-    cars_test = Read.read_data(data_path_test)
-    
-    best = train(n, numGen, sizeElite, k, p, cut, mutationProb, cars_train)
-    print(best)
-    test = Chromosome.fitnessFunction(best[1], cars_test)
-    print("Error en test: ", test)"""
-
+# Function to train the genetic algorithm
 def train(n, numGen, sizeElite, k, p, mutationProb):
-    # Creation of n cromosomas
+
+    # Create the genetic algorithm object
     ag = GeneticAlgorithm.GeneticAlgorithm(
-        datos_train="data/train_updated.csv",  # Ruta al archivo de datos de entrenamiento
-        seed=123,                             # Semilla para reproducibilidad
-        nInd=n,                               # Número de cromosomas (individuos)
-        maxIter=numGen                        # Número de generaciones
+        datos_train="data/train_updated.csv", # Path to the training data
+        seed=123,                             # Seed for the random number generator
+        nInd=n,                               # Number of individuals
+        maxIter=numGen                        # NNumber of iterations
     )
     print(ag)
-    # We asses the chromosome
+
+    # Generate the initial population
     population = ag.generatePopulation()
 
-    #print("Initial population: ", population)
-    
 
-    
-    #After create de initial population, we select, cross and mutate
-    #one time for generation
-    #in each generation we have n individuals
-
+    # We iterate over the number of generations
     for i in range(numGen):
-        #We get the list of tuplas that relation (fitness, cromosoma)
-        #the list is sorted lower toward higher fitness (betters individuals first)
+        
+        # Sort the population by fitness [(error, chromosome), ...])
         eval = ag.sortFitness(population)
 
+        # Select the elite
         elite = eval[:sizeElite]
-        #print("elite1: ", elite)
         elite = [x[1] for x in elite]
+
+        # Remove the elite from the population
         eval = eval[sizeElite:]
 
-        #print(eval)
+        # Add the elite to the new generation
         newGen = []
-        #print("elite: ", elite)
-        
+        newGen = elite + newGen
         
         # if the number of individual in the population after select the elite is odd, we add another one in the elite
         if len(eval)%2 == 1:
             elite.append(eval.pop()[1])
 
 
-        #Selecction by tournament:
+        # Select the parents for the new generation
         parents = GeneticAlgorithm.GeneticAlgorithm.parentSelection(eval, k)
 
-        #print("parents: ", parents)
-
+        # Generate the new generation
         while(len(parents) > 0):
             pair = random.sample(parents, 2)
             children = GeneticAlgorithm.GeneticAlgorithm.crossover(pair, p)
@@ -94,14 +56,12 @@ def train(n, numGen, sizeElite, k, p, mutationProb):
             parents.remove(pair[0])
             parents.remove(pair[1])
         
-        #Assess the new generation
-
         
-        newGen = elite + newGen
-        #print("nuevoa genrarion", newGen)
+        # Sort the new generation by fitness [(error, chromosome), ...])
         evalNew = ag.sortFitness(newGen)
         new_population = [x[1] for x in evalNew]
         population = new_population
+
         print("Generation ", i, " error: " , evalNew[0])
         
     return population
@@ -109,21 +69,28 @@ def train(n, numGen, sizeElite, k, p, mutationProb):
 
 if __name__ == "__main__":
 
-    n_ind = 10 # number of chromosomes
-    n_iter = 5 # number of iterations
-    elitismRate = 0.2
+    # parameters
+
+    n_ind = 20 # number of chromosomes
+
+    n_iter = 10 # number of iterations
+
+    elitismRate = 0.2 # percentage of elite chromosomes
+
     sizeElite = math.floor(n_ind*elitismRate)
 
-    k = 2
-    #Probabilidad de cruce
-    p = 0.8
-    #Probabilidad de mutación
-    mutationProb = 0.1
-    #Brusquedad en las mutaciones (0.3 por defecto)
-    mutationDelta = 0.2
+    k = 2 # probability of crossover
+
+    p = 0.8 # cut crossover point
+    
+    mutationProb = 0.1 # probability of mutation (0.3 by default)
+
+
+    # Train the genetic algorithm
+
     lastGeneration = train(n_ind, n_iter, sizeElite, k, p, mutationProb)
 
-
+    # Test the genetic algorithm
    
     data_path_test = os.path.join('data', 'test_updated.csv')
     #Data_path uses os library to make a path valid for linux and windows machines

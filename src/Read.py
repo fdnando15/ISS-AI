@@ -27,9 +27,9 @@ data_car = namedtuple(
 def read_data(file):
     
     '''
-    @param fichero: Nombre y ruta del fichero csv a leer. 
+    @param fichero: path of the file that we are going to read. 
     @type fichero:srt
-    @return: Una lista de tuplas de tipo datos_coches con todos los datos del csv  
+    @return: A list of tuples of type data_car with all the values of the csv.
     '''
     
     data = []

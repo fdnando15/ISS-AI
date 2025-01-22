@@ -7,6 +7,7 @@ import Read
 
 class GeneticAlgorithm:
 
+    # Constructor
     def __init__(self, datos_train,seed, nInd, maxIter):
         self.datos_train = Read.read_data(datos_train)
         self.seed = seed
@@ -14,26 +15,27 @@ class GeneticAlgorithm:
         self.maxIter = maxIter
 
     
-
+    # Method to print the object
     def __repr__(self):
         return (f"GeneticAlgorithm:\n"
             f"Train data size: {len(self.datos_train)} rows\n"
             f"Population size: {self.nInd}\n"
             f"Max iterations: {self.maxIter}\n")
 
-
+    # Method to generate the initial population
     def generatePopulation(self):
 
         n = self.nInd
         cromosomas = []
         for i in range(n):
+            # Create a random chromosome with 35 attributes because we have 35 columns in the dataset
             cromosomas.append(Chromosome.create_random(35))
         return cromosomas
     
-    #change the name
+    # Method to sort the chromosomes by fitness, here best fitness is the lowest value
     def sortFitness(self,cromosomas):
         
-        #tupla [(crmo1,fit1),(cromo2,fit2)]
+        # cromoFitness [(fitValue1, cromosoma1),(fitValue2, cromosoma2)...]
         cromoFitness = []
         datos = self.datos_train
 
@@ -48,11 +50,12 @@ class GeneticAlgorithm:
         return sortedCromoFitness
     
 
+    # Method to select the parents
     @staticmethod
     def parentSelection(eval,k):
         parents = []
         while(len(parents)<len(eval)):
-            # Select k random chrmosomes
+            # Select k random chrmosomes of the population
             group = random.sample(eval, k)
             # Sort chromosomes by fitness
             group = sorted(group, key = lambda x: x[0])
@@ -61,6 +64,7 @@ class GeneticAlgorithm:
         return parents
 
 
+    # Method to crossover the parents
     @staticmethod
     def crossover(pair, p):
         num = random.random()
@@ -81,6 +85,7 @@ class GeneticAlgorithm:
             children = pair
         return children
 
+    # Method to mutate the children
     @staticmethod
     def mutate(chromosome, mutationProb, d = 0.3):
         cromosoma_vars = chromosome.attributes
@@ -93,9 +98,10 @@ class GeneticAlgorithm:
         return Chromosome(cromosoma_vars)
 
 
-#parameter
 
-n_ind = 5 # number of chromosomes
+# Test the GeneticAlgorithm class
+#parameters
+'''n_ind = 5 # number of chromosomes
 n_iter = 10 # number of iterations
 elitismRate = 0.2
 sizeElite = math.floor(n_ind*elitismRate)
@@ -150,7 +156,7 @@ children = GeneticAlgorithm.crossover(pair, p)
 
 mutateChildren = GeneticAlgorithm.mutate(children[0], mutationProb, mutationDelta)
 mutateChildren = GeneticAlgorithm.mutate(children[1], mutationProb, mutationDelta)
-
+'''
 
 
 
