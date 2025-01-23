@@ -71,19 +71,19 @@ if __name__ == "__main__":
 
     # parameters
 
-    n_ind = 20 # number of chromosomes
+    n_ind = 30 # number of chromosomes
 
-    n_iter = 10 # number of iterations
+    n_iter = 40 # number of iterations
 
-    elitismRate = 0.2 # percentage of elite chromosomes
+    elitismRate = 0.1 # percentage of elite chromosomes
 
     sizeElite = math.floor(n_ind*elitismRate)
 
-    k = 2 # probability of crossover
+    k = 3 # number of chromose choosen in tournament
 
-    p = 0.8 # cut crossover point
+    p = 0.7 # probability crossover
     
-    mutationProb = 0.1 # probability of mutation (0.3 by default)
+    mutationProb = 0.4 # probability of mutation
 
 
     # Train the genetic algorithm
